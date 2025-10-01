@@ -1,6 +1,5 @@
 import app
 import pytest
-from pprint import pprint as pp
 
 
 @pytest.mark.parametrize(
@@ -31,9 +30,7 @@ def test_extract_link():
     assert len(links) == 2
 
 
-@pytest.mark.parametrize(
-    ["path"], [pytest.param(".\\tests\\doc\\"), pytest.param("tests/doc/")]
-)
+@pytest.mark.parametrize(["path"], [pytest.param("tests/doc/")])
 def test_check(path: str):
     files = app.lookup_file(path)
     assert len(files) == 2

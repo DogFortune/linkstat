@@ -1,11 +1,3 @@
-[tool.black]
-exclude = '''
-/(
-  tmp
-  | .aws-sam
-)/
-'''
-
 [tool.pytest.ini_options]
 pythonpath = "src"
 testpaths = ["tests"]
