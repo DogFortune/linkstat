@@ -1,0 +1,77 @@
+name: test-lint-format
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+permissions:
+  checks: write
+  pull-requests: write
+jobs:
+  lint:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: "pipenv"
+      - name: install pipenv
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pipenv
+      - name: install packages
+        run: pipenv sync --dev
+      - name: run lint
+        run: pipenv run lint
+  format:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: "pipenv"
+      - name: install pipenv
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pipenv
+      - name: install packages
+        run: pipenv sync --dev
+      - name: run format
+        run: pipenv run format
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: "pipenv"
+      - name: install pipenv
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pipenv
+      - name: install packages
+        run: pipenv sync --dev
+      - name: Cache Docker images.
+        uses: ScribeMD/docker-cache@0.5.0
+        with:
+          key: ${{ hashFiles('docker-compose.yml') }}
+      - name: start docker compose
+        run: docker compose up -d
+      - name: run test
+        run: pipenv run pytest -q --junit-xml pytest.xml
+        continue-on-error: true
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v5
+        if: success() || failure()
+        with:
+          report_paths: "pytest.xml"
