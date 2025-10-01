@@ -29,6 +29,7 @@ class TestExtractLink:
         pytest.param("http://127.0.0.1:8000/status/200", True, 200),
         pytest.param("http://127.0.0.1:8000/status/404", False, 404),
         pytest.param("http://127.0.0.1:8000/status/500", False, 500),
+        pytest.param("http://127.0.0.1:800", False, None),
     ],
 )
 def test_check_link(url: str, expected_result: bool, expected_status_code: int):
@@ -36,10 +37,8 @@ def test_check_link(url: str, expected_result: bool, expected_status_code: int):
 
     assert type(res) is dict
     assert res["result"] == expected_result
-    if "code" in res:
-        assert res["code"] == expected_status_code
-    if "url" in res:
-        assert res["url"] == url
+    assert res["code"] == expected_status_code
+    assert res["url"] == url
 
 
 @pytest.mark.parametrize(["path"], [pytest.param("tests/doc/")])

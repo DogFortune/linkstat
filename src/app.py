@@ -13,7 +13,7 @@ def check_link(url: str):
         return {"result": False, "code": e.code, "url": url, "reason": e.reason}
     except URLError as e:
         # そもそもアクセスすらできなかった場合はこっち
-        return {"result": False, "url": url, "reason": e.reason}
+        return {"result": False, "code": None, "url": url, "reason": e.reason}
 
 
 def extract_link(files: list):
