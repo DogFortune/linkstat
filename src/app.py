@@ -15,16 +15,28 @@ def check_link(url: str):
 
 
 def extract_link(files: list):
-    links = []
+    links = {}
+    seen_urls = set()
     # 欲しいのはファイル名と行数とリンク
     for file_path in files:
         with open(file_path, "r") as f:
             lines = f.readlines()
-            item = {"filePath": file_path, "data": []}
+            links[f"{file_path}"] = []
             for i, line in enumerate(lines):
                 if "http" in line:
-                    item["data"].append({"line": i + 1, "link": line})
-        links.append(item)
+                    url = (
+                        line.split("](")[1].rstrip(")\n")
+                        if "](" in line
+                        else line.strip()
+                    )
+                    if url in seen_urls:
+                        duplicate = True
+                    else:
+                        duplicate = False
+                        seen_urls.add(url)
+                    links[f"{file_path}"].append(
+                        {"line": i + 1, "link": line, "duplicate": duplicate}
+                    )
     return links
 
 

@@ -6,22 +6,21 @@ from pprint import pprint as pp
 class TestExtractLink:
     def test_extract_link(self):
         # ファイルからリンクを抽出するテスト。対象のドキュメントすべてのリンクを抽出する。
-        # 重複リンクにはフラグをつける。
+        # 重複リンクにはフラグをつける。2つ目移行はFalseになるのでTrueのものだけリンクチェックすればOK
         files = app.lookup_file("tests/doc/")
         links = app.extract_link(files)
 
         assert len(links) == 2
 
-        item = links[0]
+        doc1_result = [
+            item for key, value in links.items() if "doc1.md" in key for item in value
+        ]
+        doc2_result = [
+            item for key, value in links.items() if "doc2.md" in key for item in value
+        ]
 
-        assert "filePath" in item
-        assert "data" in item
-        assert type(item["data"]) is list
-
-        data = item["data"][0]
-
-        assert "line" in data
-        assert "link" in data
+        assert len(doc1_result) == 1
+        assert len(doc2_result) == 4
 
 
 @pytest.mark.parametrize(
