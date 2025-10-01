@@ -9,9 +9,11 @@ def check_link(url: str):
         res = urlopen(url, timeout=5)
         return {"result": True, "code": res.code, "url": res.url}
     except HTTPError as e:
-        return {"result": False, "code": e.code, "url": e.url}
+        # アクセスできて400や500系が来た時はこっち
+        return {"result": False, "code": e.code, "url": url, "reason": e.reason}
     except URLError as e:
-        return {"result": False, "code": e.code, "url": e.url}
+        # そもそもアクセスすらできなかった場合はこっち
+        return {"result": False, "url": url, "reason": e.reason}
 
 
 def extract_link(files: list):
