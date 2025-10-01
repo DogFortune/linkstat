@@ -1,17 +1,26 @@
 import argparse
 from pathlib import Path
-import re
+from urllib.request import urlopen
+from urllib.error import HTTPError, URLError
+
+
+def check_link(url: str):
+    try:
+        res = urlopen(url, timeout=5)
+        return {"result": True, "code": res.code, "url": res.url}
+    except HTTPError as e:
+        return {"result": False, "code": e.code, "url": e.url}
+    except URLError as e:
+        return {"result": False, "code": e.code, "url": e.url}
 
 
 def extract_link(file_path: str):
     links = []
     # 指定したファイルからリンクを抽出します。重複はこの時点で除外しますが、ファイルをまたいだリンクの重複チェックはしない。
     # 欲しいのはファイル名と行数とリンク
-
     with open(file_path, "r") as f:
         lines = f.readlines()
         for i, line in enumerate(lines):
-            print(f"{i+1}: {line}")
             if "http" in line:
                 links.append({"line": i + 1, "link": line})
     return links
