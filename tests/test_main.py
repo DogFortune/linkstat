@@ -22,6 +22,12 @@ class TestExtractLink:
         assert len(doc1_result) == 1
         assert len(doc2_result) == 4
 
+        # ちゃんと重複判定の数が正しいか、重複と見なしたリンクは想定しているものか
+        duplicated_link_list = [item for item in doc2_result if item["duplicate"]]
+        assert len(duplicated_link_list) == 2
+        assert duplicated_link_list[0]["link"] == duplicated_link_list[1]["link"]
+        assert duplicated_link_list[0]["link"] == "https://example.com"
+
 
 @pytest.mark.parametrize(
     ["url", "expected_result", "expected_status_code"],
@@ -33,6 +39,9 @@ class TestExtractLink:
     ],
 )
 def test_check_link(url: str, expected_result: bool, expected_status_code: int):
+    # アクセスチェックした時に想定しているリクエストが返ってくる事。
+    # 200系だけTrueで、それ以外はFalseで返ってくる事。
+    # URLErrorが発生した（レスポンスが無く、そもそも接続できなかった）場合はFalseでステータスコードがNoneとなる事。
     res = app.check_link(url)
 
     assert type(res) is dict

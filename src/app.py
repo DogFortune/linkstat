@@ -35,7 +35,7 @@ def extract_link(files: list):
                         duplicate = False
                         seen_urls.add(url)
                     links[f"{file_path}"].append(
-                        {"line": i + 1, "link": line, "duplicate": duplicate}
+                        {"line": i + 1, "link": url, "duplicate": duplicate}
                     )
     return links
 
