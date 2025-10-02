@@ -17,20 +17,18 @@ def check_link(url: str):
 
 
 def extract_link(files: list):
+    # 各ファイルからリンクを抽出します。
+    # 重複しているリンクはフラグがTrueになります。
+    # チェックすべきなのはこのフラフが
     links = {}
     seen_urls = set()
-    # 欲しいのはファイル名と行数とリンク
     for file_path in files:
         with open(file_path, "r") as f:
-            lines = f.readlines()
+            lines = f.read().splitlines()
             links[f"{file_path}"] = []
             for i, line in enumerate(lines):
                 if "http" in line:
-                    url = (
-                        line.split("](")[1].rstrip(")\n")
-                        if "](" in line
-                        else line.strip()
-                    )
+                    url = line.split("](")[1].rstrip(")")
                     if url in seen_urls:
                         duplicate = True
                     else:
