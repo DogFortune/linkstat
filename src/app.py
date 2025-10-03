@@ -2,18 +2,19 @@ import argparse
 from pathlib import Path
 from urllib.request import urlopen
 from urllib.error import HTTPError, URLError
+from enums import Result
 
 
 def request(url: str):
     try:
         res = urlopen(url, timeout=5)
-        return {"result": True, "code": res.code, "url": res.url}
+        return {"result": Result.OK, "code": res.code, "url": res.url}
     except HTTPError as e:
         # アクセスできて400や500系が来た時はこっち
-        return {"result": False, "code": e.code, "url": url, "reason": e.reason}
+        return {"result": Result.NG, "code": e.code, "url": url, "reason": e.reason}
     except URLError as e:
         # そもそもアクセスすらできなかった場合はこっち
-        return {"result": False, "code": None, "url": url, "reason": e.reason}
+        return {"result": Result.NG, "code": None, "url": url, "reason": e.reason}
 
 
 def check_links(links: dict) -> list:

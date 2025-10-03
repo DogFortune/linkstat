@@ -43,13 +43,13 @@ class TestExtractLink:
 @pytest.mark.parametrize(
     ["url", "expected_result", "expected_status_code"],
     [
-        pytest.param("http://127.0.0.1:8000/status/200", True, 200),
-        pytest.param("http://127.0.0.1:8000/status/404", False, 404),
-        pytest.param("http://127.0.0.1:8000/status/500", False, 500),
-        pytest.param("http://127.0.0.1:800", False, None),
+        pytest.param("http://127.0.0.1:8000/status/200", "OK", 200),
+        pytest.param("http://127.0.0.1:8000/status/404", "NG", 404),
+        pytest.param("http://127.0.0.1:8000/status/500", "NG", 500),
+        pytest.param("http://127.0.0.1:800", "NG", None),
     ],
 )
-def test_request(url: str, expected_result: bool, expected_status_code: int):
+def test_request(url: str, expected_result: str, expected_status_code: int):
     # アクセスチェックした時に想定しているリクエストが返ってくる事。
     # 200系だけTrueで、それ以外はFalseで返ってくる事。
     # URLErrorが発生した（レスポンスが無く、そもそも接続できなかった）場合はFalseでステータスコードがNoneとなる事。
