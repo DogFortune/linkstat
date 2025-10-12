@@ -1,4 +1,3 @@
-import argparse
 from pathlib import Path
 from urllib.request import urlopen
 from urllib.error import HTTPError, URLError
@@ -38,6 +37,13 @@ def check_links(links: dict) -> list:
     return results
 
 
+def search(path: str, filter="*.md"):
+    # 指定したディレクトリから検査対象のファイルを抽出します。デフォルトはmdです。
+    p = Path(path)
+    files = [str(item) for item in p.rglob(filter)]
+    return files
+
+
 def extract_link(files: list) -> dict:
     # 各ファイルからリンクを抽出します。
     # 重複しているリンクはフラグがTrueになります。
@@ -59,31 +65,3 @@ def extract_link(files: list) -> dict:
                         {"line": i + 1, "url": url, "duplicate": duplicate}
                     )
     return links
-
-
-def lookup_file(path: str, filter="*.md"):
-    # 指定したディレクトリから検査対象のファイルを抽出します。デフォルトはmdです。
-    p = Path(path)
-    files = [str(item) for item in p.rglob(filter)]
-    return files
-
-
-def create_parser():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("src")
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument("--verbose", action="store_true", help="Increase verbosity")
-    group.add_argument("--quiet", action="store_true", help="Decrease verbosity")
-    return parser
-
-
-def main(args=None):
-    parser = create_parser()
-    parsed_args = parser.parse_args(args)
-    files = lookup_file(parsed_args.src)
-    links = extract_link(files)
-    result = check_links(links)
-
-
-if __name__ == "__main__":
-    main()
