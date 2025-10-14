@@ -1,0 +1,11 @@
+name: LinkWatch
+description: "Check whether you can correctly access the URL listed in the document file."
+author: DogFortune
+
+inputs:
+  output-option:
+    description: output format option
+    required: false
+
+runs:
+  using: 
