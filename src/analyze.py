@@ -2,19 +2,8 @@ from pathlib import Path
 from urllib.request import urlopen
 from urllib.error import HTTPError, URLError
 from enums import Result
+from report import ReportData
 import dataclasses
-
-
-@dataclasses.dataclass
-class AnalyzeResult:
-    """ドキュメントの解析結果"""
-
-    file: str
-    line: int
-    url: str
-    result: str
-    code: int
-    reason: str
 
 
 @dataclasses.dataclass
@@ -48,7 +37,7 @@ def request(url: str) -> AnalyzeResponse:
         return AnalyzeResponse(Result.NG, None, url, e.reason)
 
 
-def check_links(links: dict[str, LinkInfo]) -> list[AnalyzeResult]:
+def check_links(links: dict[str, LinkInfo]) -> list[ReportData]:
     # リンクをチェックします。
     # チェックすべきなのはFalseのものだけ。
     results = []
@@ -56,7 +45,7 @@ def check_links(links: dict[str, LinkInfo]) -> list[AnalyzeResult]:
         for item in link_items:
             if not item.duplicate:
                 res = request(item.url)
-                data = AnalyzeResult(
+                data = ReportData(
                     file_path, item.line, item.url, res.result, res.code, res.reason
                 )
                 results.append(data)

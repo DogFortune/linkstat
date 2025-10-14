@@ -1,5 +1,6 @@
 import pytest
 import analyze
+from report import ReportData
 
 
 @pytest.mark.parametrize(
@@ -28,13 +29,14 @@ def test_request(url: str, expected_result: str, expected_status_code: int):
 def test_check_links():
     files = analyze.search("tests/doc/")
     links = analyze.extract_link(files)
-    result = analyze.check_links(links)
+    results_report_data = analyze.check_links(links)
 
     # 重複しているリンクは結果に含まれていない事（ドキュメントに記載されているリンクの数 - 重複しているリンクの数になっている事）
-    assert len(result) == 3
+    assert len(results_report_data) == 3
 
     # 形式チェック
-    for item in result:
+    for item in results_report_data:
+        assert type(item) is ReportData
         assert item.file is not None
         assert item.line is not None
         assert item.url is not None
