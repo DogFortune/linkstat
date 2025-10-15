@@ -25,8 +25,6 @@ def main(args=None):
     parser = create_parser()
     parsed_args = parser.parse_args(args)
 
-    print(parsed_args)
-
     format = __format__setting(parsed_args.format)
     src = parsed_args.src
 
