@@ -1,10 +1,17 @@
 import os
 import analyze
 import argparse
+from enums import OutputType
 
 
 def __format__setting(format: str):
-    raise NotImplementedError
+    match format.upper():
+        case "CONSOLE":
+            return OutputType.Console
+        case "JSON" | "YAML":
+            raise NotImplementedError
+        case _:
+            raise ValueError
 
 
 def create_parser():
