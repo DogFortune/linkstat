@@ -1,0 +1,19 @@
+name: LinkWatch
+description: "Check whether you can correctly access the URL listed in the document file."
+author: DogFortune
+
+inputs:
+  output-option:
+    description: output format option
+    required: false
+  src:
+    description: check directory
+    required: true
+    default: "."
+
+runs:
+  using: docker
+  image: Dockerfile
+  env:
+    SRC_DIR: ${{ inputs.src }}
+    OUTOUT_FORMAT: ${{ inputs.output-option }}

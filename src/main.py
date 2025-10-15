@@ -1,13 +1,12 @@
+import os
 import analyze
 import argparse
 
 
 def create_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument("src")
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument("--verbose", action="store_true", help="Increase verbosity")
-    group.add_argument("--quiet", action="store_true", help="Decrease verbosity")
+    parser.add_argument("src", default=os.environ.get("SRC_DIR", "."))
+    parser.add_argument("--format", default=os.environ.get("OUTPUT_FORMAT", "CONSOLE"))
     return parser
 
 
