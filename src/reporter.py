@@ -1,5 +1,5 @@
 import dataclasses
-from enums import OutputType
+from pprint import pprint as pp
 
 
 @dataclasses.dataclass
@@ -12,5 +12,12 @@ class ReportData:
     reason: str
 
 
-def console(data: list[ReportData]) -> str:
-    line = ""
+class Console:
+    def __init__(self, data: list[ReportData]):
+        self.data_list = data
+
+    def generate(self) -> str:
+        pp(self.data_list)
+        line = ""
+
+        return line
