@@ -24,8 +24,8 @@ class TestValid:
         links = analyzer.extract_link(files)
         results_report_data = analyzer.check_links(links)
         with TemporaryDirectory() as dir:
-            output_path = Path(dir, "result.json")
+            output_path = Path("tests", "result.json")
 
-            reporter.json_dump(results_report_data, output_path)
+            reporter.dump_json(results_report_data, output_path)
 
             assert os.path.isfile(output_path) is True
