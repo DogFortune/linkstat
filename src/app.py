@@ -13,20 +13,17 @@ def __output(data: list[ReportData], format: OutputType):
             print(line)
 
 
-def __format__setting(format: str):
-    match format.upper():
-        case "CONSOLE":
-            return OutputType.Console
-        case "JSON" | "YAML":
-            raise NotImplementedError
-        case _:
-            raise ValueError
+def __format__setting(args):
+    if args.report_json:
+        return OutputType.Json
+    else:
+        return OutputType.Console
 
 
 def create_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument("src", default=os.environ.get("SRC_DIR", "."))
-    parser.add_argument("--format", default=os.environ.get("OUTPUT_FORMAT", "CONSOLE"))
+    parser.add_argument("--report-json", type=str, help="output report file")
     return parser
 
 
@@ -34,7 +31,7 @@ def main(args=None):
     parser = create_parser()
     parsed_args = parser.parse_args(args)
 
-    format = __format__setting(parsed_args.format)
+    format = __format__setting(parsed_args)
     src = parsed_args.src
 
     files = analyzer.search(src)
