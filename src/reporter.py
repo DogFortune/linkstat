@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from dataclasses_json import dataclass_json
 from pprint import pformat
+from typing import List
 import json
 
 
@@ -15,6 +16,20 @@ class ReportData:
     reason: str
 
 
+@dataclass_json
+@dataclass
+class ReportCollection:
+    Reports: List[ReportData]
+
+
+class CustomEncoder(json.JSONEncoder):
+    def default(self, obj):
+        # 例外オブジェクトを文字列に変換
+        if isinstance(obj, Exception):
+            return str(obj)
+        return super().default(obj)
+
+
 def console(data: list[ReportData]):
     # TODO: 出力形式は仮でpformatを設定中。
     line = pformat(data)
@@ -22,6 +37,9 @@ def console(data: list[ReportData]):
 
 
 def dump_json(data: list[ReportData], output_path: str):
-    json_str = ReportData.schema().dumps(data, many=True, indent=4)
+    collection = ReportCollection(Reports=data)
+    json_str = json.dumps(
+        collection.to_dict(), indent=4, ensure_ascii=False, cls=CustomEncoder
+    )
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(json_str)
