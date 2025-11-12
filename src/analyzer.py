@@ -49,22 +49,18 @@ def check_links(links: dict[str, LinkInfo]) -> list[ReportData]:
     with tqdm(links.items()) as links_prog:
         for file_path, link_items in links_prog:
             links_prog.set_description(file_path)
-            with tqdm(link_items) as link_items_prog:
-                for item in link_items_prog:
-                    if not item.duplicate:
-                        res = request(item.url)
-                        data = ReportData(
-                            file_path,
-                            item.line,
-                            item.url,
-                            res.result,
-                            res.code,
-                            res.reason,
-                        )
-                        link_items_prog.set_description(
-                            f"url: {item.url} result: {res.result}"
-                        )
-                        results.append(data)
+            for item in tqdm(link_items):
+                if not item.duplicate:
+                    res = request(item.url)
+                    data = ReportData(
+                        file_path,
+                        item.line,
+                        item.url,
+                        res.result,
+                        res.code,
+                        res.reason,
+                    )
+                    results.append(data)
     return results
 
 

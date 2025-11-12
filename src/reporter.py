@@ -1,5 +1,6 @@
 import dataclasses
-from pprint import pprint as pp
+from pprint import pformat
+import json
 
 
 @dataclasses.dataclass
@@ -17,7 +18,15 @@ class Console:
         self.data_list = data
 
     def generate(self) -> str:
-        pp(self.data_list)
-        line = ""
-
+        line = pformat(self.data_list)
         return line
+
+
+class Json:
+    def __init__(self, data: list[ReportData], output_path: str):
+        self.data_list = data
+        self.path = output_path
+
+    def generate(self):
+        with open(self.path, "w", encoding="utf-8") as f:
+            json.dump(self.data_list, f, indent=4)
