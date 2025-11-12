@@ -8,7 +8,7 @@ class TestValid:
 
     def test_console(self):
         """コンソール出力テスト。文字列が想定している形である事"""
-        files = analyzer.search("tests/doc/")
+        files = analyzer.search("tests/sample_doc/")
 
         links = analyzer.extract_link(files)
         results_report_data = analyzer.check_links(links)

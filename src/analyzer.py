@@ -6,7 +6,7 @@ from reporter import ReportData
 import dataclasses
 import re
 
-URL_PATTERN = r"""((?:[a-zA-Z]{1,10}://|//)[^"'/]{1,}.[a-zA-Z]{2,}[^"']{0,})"""
+URL_PATTERN = r'https?://[^\s\)\]>"]+'
 URL_RE = re.compile(URL_PATTERN)
 
 
@@ -75,8 +75,7 @@ def extract_link(files: list) -> dict[str, LinkInfo]:
             for i, line in enumerate(lines):
                 result = URL_RE.search(line)
                 if result:
-                    print(result.group())
-                    url = line.split("](")[1].rstrip(")")
+                    url = result.group()
                     if url in seen_urls:
                         duplicate = True
                     else:

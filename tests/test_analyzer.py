@@ -27,7 +27,7 @@ def test_request(url: str, expected_result: str, expected_status_code: int):
 
 
 def test_check_links():
-    files = analyzer.search("tests/doc/")
+    files = analyzer.search("tests/sample_doc/")
     links = analyzer.extract_link(files)
     results_report_data = analyzer.check_links(links)
 
@@ -50,7 +50,7 @@ def test_check_links():
             assert item.reason is not None
 
 
-@pytest.mark.parametrize(["path"], [pytest.param("tests/doc/")])
+@pytest.mark.parametrize(["path"], [pytest.param("tests/sample_doc/")])
 def test_search(path: str):
     files = analyzer.search(path)
     assert len(files) == 2
@@ -61,7 +61,7 @@ def test_extract_link():
     # データ構造としてはdictのKeyにファイルのパス、Valueにリンクに関する情報が入っている。
     # これは1ファイルの中に大量のリンクがあった時、すべてがフラットなリストだとファイル名を1つ1つ持つ事になるのでデータ量が増えてしまう。ファイル名は値として重複しやすいので、Keyという形で1つにまとめたのが理由。
     # 重複リンクにはフラグをつける。2つ目以降はFalseになるのでTrueのものだけリンクチェックすればOK
-    files = analyzer.search("tests/doc/")
+    files = analyzer.search("tests/sample_doc/")
     links = analyzer.extract_link(files)
 
     assert len(links) == 2

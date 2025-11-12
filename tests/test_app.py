@@ -8,7 +8,7 @@ class TestValid:
 
     def test_main_with_minimal_arguments(self):
         """環境変数も引数も指定しない場合、コンソールモードで動作する事"""
-        app.main(["tests/doc/"])
+        app.main(["tests/sample_doc/"])
 
     @pytest.mark.parametrize(
         ["format"],
@@ -23,7 +23,7 @@ class TestValid:
         :param format: _description_
         :type format: str
         """
-        app.main(["--format", format, "tests/doc/"])
+        app.main(["--format", format, "tests/sample_doc/"])
 
 
 class TestInValid:
@@ -49,7 +49,7 @@ class TestInValid:
         :type format: str
         """
         with pytest.raises(NotImplementedError):
-            app.main(["--format", format, "tests/doc/"])
+            app.main(["--format", format, "tests/sample_doc/"])
 
     @pytest.mark.parametrize(
         ["format"],
@@ -61,7 +61,7 @@ class TestInValid:
         :type format: str
         """
         with pytest.raises(ValueError):
-            app.main(["--format", format, "tests/doc/"])
+            app.main(["--format", format, "tests/sample_doc/"])
 
     @pytest.mark.usefixtures("setup_environ")
     def test_raise_format_args_use_environment(self):
@@ -71,4 +71,4 @@ class TestInValid:
         :type format: str
         """
         with pytest.raises(ValueError):
-            app.main(["tests/doc/"])
+            app.main(["tests/sample_doc/"])
