@@ -8,8 +8,16 @@ requires-python = ">=3.10"
 version = "0.0.1"
 dependencies = ["tqdm", "dataclasses-json"]
 
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project.scripts]
 linkwatch = "linkwatch.app:main"
+
+[project.urls]
+Homepage = "https://github.com/DogFortune/LinkWatch"
+Isues = "https://github.com/DogFortune/LinkWatch/issues"
 
 [tool.pytest.ini_options]
 pythonpath = "src"
