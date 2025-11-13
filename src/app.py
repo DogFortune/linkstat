@@ -43,7 +43,3 @@ def main(args=None):
     links = analyzer.extract_link(files)
     report_data_list = analyzer.check_links(links)
     __output(report_data_list, format, parsed_args)
-
-
-if __name__ == "__main__":
-    main()
