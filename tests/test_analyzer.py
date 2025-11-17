@@ -27,13 +27,22 @@ def test_request(url: str, expected_result: str, expected_status_code: int):
         assert res.reason is not None
 
 
-def test_check_links():
-    files = analyzer.search("tests/sample_doc/")
+@pytest.mark.parametrize(
+    ["path", "report_data_count"],
+    [
+        # ディレクトリ指定パターン
+        pytest.param("tests/sample_doc/", 3),
+        # 単体ファイル指定パターン
+        pytest.param("tests/sample_doc/doc1.md", 1),
+    ],
+)
+def test_check_links(path: str, report_data_count: int):
+    files = analyzer.search(path)
     links = analyzer.extract_url(files)
     results_report_data = analyzer.check_links(links)
 
     # 重複しているリンクは結果に含まれていない事（ドキュメントに記載されているリンクの数 - 重複しているリンクの数になっている事）
-    assert len(results_report_data) == 3
+    assert len(results_report_data) == report_data_count
 
     # 形式チェック
     for item in results_report_data:
@@ -71,20 +80,18 @@ def test_extract_link():
     # これは1ファイルの中に大量のリンクがあった時、すべてがフラットなリストだとファイル名を1つ1つ持つ事になるのでデータ量が増えてしまう。ファイル名は値として重複しやすいので、Keyという形で1つにまとめたのが理由。
     # 重複リンクにはフラグをつける。2つ目以降はFalseになるのでTrueのものだけリンクチェックすればOK
     files = analyzer.search("tests/sample_doc/")
+
     links = analyzer.extract_url(files)
 
     assert len(links) == 2
-
     doc1_result = [
         item for key, value in links.items() if "doc1.md" in key for item in value
     ]
     doc2_result = [
         item for key, value in links.items() if "doc2.md" in key for item in value
     ]
-
     assert len(doc1_result) == 1
     assert len(doc2_result) == 4
-
     # ちゃんと重複判定の数が正しいか、重複と見なしたリンクは想定しているものか
     duplicated_link_list = [item for item in doc2_result if item.duplicate]
     assert len(duplicated_link_list) == 2

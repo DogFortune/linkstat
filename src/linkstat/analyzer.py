@@ -92,7 +92,7 @@ def search(path: str, filter="*.md") -> list:
 
 
 def extract_url(files: list) -> dict[str, URLInfo]:
-    """ファイルからURLを抽出します。
+    """ファイルからURLを抽出します。重複しているリンクも含まれます。
 
     :param files: _description_
     :type files: list
