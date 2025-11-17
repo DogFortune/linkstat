@@ -18,3 +18,6 @@ class TestValid:
             app.main(["tests/sample_doc/", "--report-json", str(output_path)])
 
             assert os.path.isfile(output_path) is True
+
+    def test_main_single_file(self):
+        app.main(["tests/sample_doc/doc1.md"])

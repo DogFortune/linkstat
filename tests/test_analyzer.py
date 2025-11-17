@@ -1,3 +1,4 @@
+import os
 import pytest
 from linkstat import analyzer
 from linkstat.reporter import ReportData
@@ -54,6 +55,14 @@ def test_check_links():
 def test_search(path: str):
     files = analyzer.search(path)
     assert len(files) == 2
+
+
+def test_search_single_file():
+    """単一のファイルを指定した場合、指定したファイルのパスだけが入っているリストが返ってくる事"""
+    files = analyzer.search("tests/sample_doc/doc1.md")
+
+    assert len(files) == 1
+    assert os.path.basename(files[0]) == "doc1.md"
 
 
 def test_extract_link():
