@@ -14,6 +14,11 @@ The MIT License (MIT)
 Copyright © 2019 Filipe Laíns <filipe.lains@gmail.com>
 https://github.com/pypa/build/blob/48c9d90339f52b8c5e518317c228b4895ac83549/LICENSE
 
+## hatch
+The MIT License  
+Copyright (c) 2017-present Ofek Lev <oss@ofek.dev>  
+https://github.com/pypa/hatch/blob/8695db4ecdb60e48d809c5095358d076dc22ebf2/LICENSE.txt
+
 ## Flake8
 Flake8 License (MIT)  
 Copyright (C) 2011-2013 Tarek Ziade <tarek@ziade.org>  

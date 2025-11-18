@@ -13,6 +13,7 @@ flake8 = "*"
 black = "*"
 pytest-randomly = "*"
 build = "*"
+hatch = "*"
 
 [requires]
 python_version = "3.13"
