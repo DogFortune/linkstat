@@ -1,9 +1,10 @@
 import os
-import analyzer
-import reporter
+from pathlib import Path
+from . import analyzer
+from . import reporter
 import argparse
-from enums import OutputType
-from reporter import ReportData
+from .enums import OutputType
+from .reporter import ReportData
 
 
 def __output(data: list[ReportData], format: OutputType, args):
@@ -25,7 +26,7 @@ def __output(data: list[ReportData], format: OutputType, args):
             reporter.dump_json(data, output_path)
 
 
-def __format__setting(args) -> OutputType:
+def __format_setting(args) -> OutputType:
     """結果の出力形式の設定
 
     :param args: Arguments
@@ -34,6 +35,10 @@ def __format__setting(args) -> OutputType:
     :rtype: OutputType
     """
     if args.report_json:
+        if Path(args.report_json).is_dir():
+            raise ValueError(
+                f"ERROR: --report-path must be a filename, given: {args.report_json}"
+            )
         return OutputType.Json
     else:
         return OutputType.Console
@@ -52,7 +57,7 @@ def main(args=None):
     parser = create_parser()
     parsed_args = parser.parse_args(args)
 
-    format = __format__setting(parsed_args)
+    format = __format_setting(parsed_args)
     src = parsed_args.src
 
     files = analyzer.search(src)

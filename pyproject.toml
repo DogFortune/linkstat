@@ -1,16 +1,40 @@
 [project]
-name = "linkwatch"
-authors = [{ name = "DogFortune" }]
+name = "linkstat"
+authors = [{ name = "DogFortune", email = "dogfortune.2000@gmail.com" }]
 description = "Perform connectivity checks on URLs listed in the Markdown"
 license-files = ["LICENSE"]
 readme = "README.md"
 requires-python = ">=3.10"
-version = "0.0.1"
+version = "0.0.2"
 dependencies = ["tqdm", "dataclasses-json"]
+keywords = ["check", "url", "link"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Documentation",
+    "Topic :: Internet",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project.scripts]
-linkwatch = "src.app:main"
+linkstat = "linkstat.app:main"
+
+[project.urls]
+Repository = "https://github.com/DogFortune/linkstat"
+Issues = "https://github.com/DogFortune/linkstat/issues"
+Changelog = "https://github.com/DogFortune/linkstat/releases"
 
 [tool.pytest.ini_options]
 pythonpath = "src"
 testpaths = ["tests"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/linkstat"]
+
+[tool.hatch.publish.index]
+disable = true

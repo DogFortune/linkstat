@@ -1,8 +1,8 @@
 from pathlib import Path
 from urllib.request import urlopen
 from urllib.error import HTTPError, URLError
-from enums import Result
-from reporter import ReportData
+from linkstat.enums import Result
+from linkstat.reporter import ReportData
 from dataclasses import dataclass
 import re
 from tqdm import tqdm
@@ -87,12 +87,14 @@ def search(path: str, filter="*.md") -> list:
     :rtype: list
     """
     p = Path(path)
+    if p.is_file():
+        return [str(p)]
     files = [str(item) for item in p.rglob(filter)]
     return files
 
 
 def extract_url(files: list) -> dict[str, URLInfo]:
-    """ファイルからURLを抽出します。
+    """ファイルからURLを抽出します。重複しているリンクも含まれます。
 
     :param files: _description_
     :type files: list
