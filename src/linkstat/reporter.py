@@ -52,8 +52,6 @@ def summary(data: list[ReportData]):
     :return: _description_
     :rtype: _type_
     """
-    fill_char = f"{Colors.GREEN}={Colors.RESET}"
-
     total_count = len(data)
     ok_count = sum(item.result == Result.OK for item in data)
     ng_items = [item for item in data if item.result == Result.NG]
@@ -74,6 +72,11 @@ def summary(data: list[ReportData]):
     total_fill = terminal_width - len(plain_message)
     left_fill = total_fill // 2
     right_fill = total_fill - left_fill
+
+    if len(ng_items) > 0:
+        fill_char = f"{Colors.RED}={Colors.RESET}"
+    else:
+        fill_char = f"{Colors.GREEN}={Colors.RESET}"
 
     summary_message = f"{fill_char*left_fill}{color_message}{fill_char*right_fill}"
     return summary_message
