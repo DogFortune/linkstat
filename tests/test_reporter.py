@@ -22,11 +22,13 @@ def setup_report_data():
 class TestValid:
     """正常系"""
 
-    def test_console(self, setup_report_data):
-        """コンソール出力テスト。文字列が想定している形である事"""
+    def test_summary(self, setup_report_data):
+        """サマリー出力テスト。文字列が想定している形である事"""
         output_line = reporter.summary(setup_report_data)
 
         assert output_line is not None
+        assert reporter.Colors.RED in output_line
+        assert reporter.Colors.GREEN not in output_line
 
     def test_json(self, setup_report_data):
         with TemporaryDirectory() as dir:
