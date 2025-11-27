@@ -15,7 +15,7 @@ class ReportData:
     url: str
     result: Result
     code: int
-    reason: str
+    reason: str | None
 
 
 @dataclass_json
@@ -38,9 +38,7 @@ class Colors:
     RED = "\033[91m"
     GREEN = "\033[92m"
     YELLOW = "\033[93m"
-    BLUE = "\033[94m"
     RESET = "\033[0m"
-    BOLD = "\033[1m"
 
 
 def summary(data: list[ReportData]):
@@ -59,11 +57,16 @@ def summary(data: list[ReportData]):
     total_part = f"{Colors.GREEN}{total_count} Total{Colors.RESET}"
     ok_part = f"{Colors.GREEN}{ok_count} OK{Colors.RESET}"
 
-    # TODO: NGが無ければ作る必要が無いので工夫する。メッセージも同様。
-    ng_part = f"{Colors.RED}{len(ng_items)} NG{Colors.RESET}"
+    color_message = f" {total_part}, {ok_part}"
+    plain_message = f" {total_count} Total, {ok_count} OK"
 
-    color_message = f" {total_part}, {ok_part}, {ng_part} "
-    plain_message = f" {total_count} Total, {ok_count} OK, {len(ng_items)} NG "
+    if (ng_count := len(ng_items)) == 0:
+        fill_char = f"{Colors.GREEN}={Colors.RESET}"
+    else:
+        ng_part = f"{Colors.RED}{ng_count} NG{Colors.RESET}"
+        fill_char = f"{Colors.RED}={Colors.RESET}"
+        color_message += f", {ng_part} "
+        plain_message += f", {ng_count} NG "
 
     terminal_width = shutil.get_terminal_size(fallback=(80, 24)).columns
     if terminal_width < 40:
@@ -72,11 +75,6 @@ def summary(data: list[ReportData]):
     total_fill = terminal_width - len(plain_message)
     left_fill = total_fill // 2
     right_fill = total_fill - left_fill
-
-    if len(ng_items) > 0:
-        fill_char = f"{Colors.RED}={Colors.RESET}"
-    else:
-        fill_char = f"{Colors.GREEN}={Colors.RESET}"
 
     summary_message = f"{fill_char*left_fill}{color_message}{fill_char*right_fill}"
     return summary_message

@@ -1,6 +1,5 @@
 import pytest
-from linkstat import reporter
-from linkstat import analyzer
+from linkstat import reporter, analyzer, enums
 from tempfile import TemporaryDirectory
 from pathlib import Path
 import os
@@ -28,7 +27,22 @@ class TestValid:
 
         assert output_line is not None
         assert reporter.Colors.RED in output_line
-        assert reporter.Colors.GREEN not in output_line
+
+    def test_summary_all_ok(self):
+        """OKのものだけだった時はNGが入っておらず文字もグリーンのみである事"""
+        results_report_data = []
+        results_report_data.append(
+            reporter.ReportData(
+                "path/to/doc1.md", 2, "https://example.com", enums.Result.OK, 200, None
+            )
+        )
+        summary_message = reporter.summary(results_report_data)
+
+        assert summary_message is not None
+        assert "NG" not in summary_message
+        assert reporter.Colors.GREEN in summary_message
+        assert reporter.Colors.RED not in summary_message
+        assert reporter.Colors.YELLOW not in summary_message
 
     def test_json(self, setup_report_data):
         with TemporaryDirectory() as dir:
