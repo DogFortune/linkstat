@@ -63,6 +63,7 @@ def summary(data: list[ReportData]):
     if (ng_count := len(ng_items)) == 0:
         fill_char = f"{Colors.GREEN}={Colors.RESET}"
     else:
+        ng_detail = "\n".join([f"{item.url}: {item.result}" for item in ng_items])
         ng_part = f"{Colors.RED}{ng_count} NG{Colors.RESET}"
         fill_char = f"{Colors.RED}={Colors.RESET}"
         color_message += f", {ng_part} "
