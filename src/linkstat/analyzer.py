@@ -5,7 +5,6 @@ from linkstat.enums import Result
 from linkstat.reporter import ReportData
 from dataclasses import dataclass
 import re
-from tqdm import tqdm
 
 URL_PATTERN = r'https?://[^\s\)\]>"]+'
 URL_RE = re.compile(URL_PATTERN)
@@ -50,29 +49,28 @@ def request(url: str) -> AnalyzeResponse:
 
 
 def check_links(links: dict[str, URLInfo]) -> list[ReportData]:
-    """URLの疎通確認を行います。確認を行うのは重複していないものだけです。
+    """URLの疎通確認を行います。確認を行うのは重複していないものだけ。
 
     :param links: URLリスト
     :type links: dict[str, URLInfo]
-    :return: 確認結果
+    :return: 確認結果（重複したURLは除く）
     :rtype: list[ReportData]
     """
     results = []
-    with tqdm(links.items()) as links_prog:
-        for file_path, link_items in links_prog:
-            links_prog.set_description(file_path)
-            for item in tqdm(link_items):
-                if not item.duplicate:
-                    res = request(item.url)
-                    data = ReportData(
-                        file_path,
-                        item.line,
-                        item.url,
-                        res.result,
-                        res.code,
-                        res.reason,
-                    )
-                    results.append(data)
+    for file_path, link_items in links.items():
+        for item in link_items:
+            if not item.duplicate:
+                res = request(item.url)
+                data = ReportData(
+                    file_path,
+                    item.line,
+                    item.url,
+                    res.result,
+                    res.code,
+                    res.reason,
+                )
+                print(f"{data.url}: {data.result}")
+                results.append(data)
     return results
 
 

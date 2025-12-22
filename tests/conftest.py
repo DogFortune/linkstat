@@ -3,8 +3,8 @@ from urllib.request import Request, urlopen
 from urllib.error import HTTPError, URLError
 
 
-@pytest.fixture(scope="session", autouse=True)
-def check_mock_server():
+@pytest.fixture()
+def use_mock_server():
     """テスト実行前にモックサーバーの起動を確認"""
     mock_server_url = "http://localhost:8000/get"
 

@@ -13,16 +13,25 @@ from linkstat.reporter import ReportData
         pytest.param("http://127.0.0.1:800", "NG", None),
     ],
 )
+@pytest.mark.usefixtures("use_mock_server")
 def test_request(url: str, expected_result: str, expected_status_code: int):
-    # アクセスチェックした時に想定しているリクエストが返ってくる事。
-    # 200系だけTrueで、それ以外はFalseで返ってくる事。
-    # URLErrorが発生した（レスポンスが無く、そもそも接続できなかった）場合はFalseでステータスコードがNoneとなる事。
+    """URLチェックのレスポンスの形式と挙動テスト。
+    想定している形式で返ってきている事と、URLErrorが発生する場合はステータスコードがNoneになっている事。
+
+    :param url: _description_
+    :type url: str
+    :param expected_result: _description_
+    :type expected_result: str
+    :param expected_status_code: _description_
+    :type expected_status_code: int
+    """
     res = analyzer.request(url)
 
     assert type(res) is analyzer.AnalyzeResponse
     assert res.result == expected_result
     assert res.code == expected_status_code
     assert res.url == url
+    # NGの場合は理由が必ず入っている事
     if res.result.upper() == "NG":
         assert res.reason is not None
 

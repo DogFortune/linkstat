@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 from . import analyzer
 from . import reporter
@@ -19,7 +18,7 @@ def __output(data: list[ReportData], format: OutputType, args):
     """
     match format:
         case OutputType.Console:
-            line = reporter.console(data)
+            line = reporter.get_summary_message(data)
             print(line)
         case OutputType.Json:
             output_path = args.report_json
@@ -46,7 +45,7 @@ def __format_setting(args) -> OutputType:
 
 def create_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument("src", default=os.environ.get("SRC_DIR", "."))
+    parser.add_argument("src")
     parser.add_argument(
         "--report-json", type=str, help="Create json report file at given path"
     )
@@ -60,6 +59,8 @@ def main(args=None):
     format = __format_setting(parsed_args)
     src = parsed_args.src
 
+    start_msg = reporter.get_fill_plain_message(" linkstat start ")
+    print(start_msg)
     files = analyzer.search(src)
     links = analyzer.extract_url(files)
     report_data_list = analyzer.check_links(links)

@@ -30,11 +30,6 @@ The MIT License (MIT)
 Copyright (c) 2018 Łukasz Langa  
 https://github.com/psf/black/blob/43135e9fafccbca723910a45aa62f0f182e85e5f/LICENSE
 
-## tqdm
-MPL v2.0 and MIT  
-Copyright (c) 2013 noamraph  
-https://github.com/tqdm/tqdm/blob/0ed5d7f18fa3153834cbac0aa57e8092b217cc16/LICENCE
-
 ## Dataclasses JSON
 The MIT License  
 Copyright (c) 2019 Charles Li and contributors  
