@@ -5,7 +5,7 @@ description = "Perform connectivity checks on URLs listed in the Markdown"
 license-files = ["LICENSE"]
 readme = "README.md"
 requires-python = ">=3.10"
-version = "1.0.0"
+version = "1.0.1"
 dependencies = ["dataclasses-json"]
 keywords = ["check", "url", "link"]
 classifiers = [
