@@ -38,14 +38,16 @@ def request(url: str) -> AnalyzeResponse:
     :rtype: AnalyzeResponse
     """
     try:
-        res = urlopen(url, timeout=3)
-        return AnalyzeResponse(Result.OK, res.code, res.url, None)
+        with urlopen(url, timeout=3) as res:
+            return AnalyzeResponse(Result.OK, res.code, res.url, None)
     except HTTPError as e:
         # アクセスできて400や500系が来た時はこっち
         return AnalyzeResponse(Result.NG, e.code, url, e.reason)
     except URLError as e:
         # そもそもアクセスすらできなかった場合はこっち
         return AnalyzeResponse(Result.NG, None, url, e.reason)
+    except TimeoutError:
+        return AnalyzeResponse(Result.NG, None, url, "Timeout")
 
 
 def check_links(links: dict[str, URLInfo]) -> list[ReportData]:

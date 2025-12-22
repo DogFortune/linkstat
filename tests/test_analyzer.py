@@ -107,3 +107,19 @@ def test_extract_link():
     assert len(duplicated_link_list) == 2
     assert duplicated_link_list[0].url == duplicated_link_list[1].url
     assert duplicated_link_list[0].url == "https://example.com"
+
+
+class TestInValid:
+    @pytest.mark.usefixtures("use_mock_server")
+    def test_request_timeout(self):
+        """タイムアウトの場合、NGになる事"""
+
+        url = "https://httpbin.org/delay/10"
+
+        res = analyzer.request(url)
+
+        assert type(res) is analyzer.AnalyzeResponse
+        assert res.result == "NG"
+        assert res.code is None
+        assert res.url == url
+        assert res.reason == "Timeout"
