@@ -41,6 +41,21 @@ class Colors:
     RESET = "\033[0m"
 
 
+def session_start():
+    fill_char = "="
+    message = " linkstat start "
+    terminal_width = shutil.get_terminal_size(fallback=(80, 24)).columns
+    if terminal_width < 40:
+        terminal_width = 80
+
+    total_fill = terminal_width - len(message)
+    left_fill = total_fill // 2
+    right_fill = total_fill - left_fill
+
+    start_message = f"{fill_char*left_fill}{message}{fill_char*right_fill}"
+    return start_message
+
+
 def summary(data: list[ReportData]):
     """サマリーを作成します。
     チェックしたURLの数、OK,NGの数、NGのものはURLを出す。
@@ -59,11 +74,13 @@ def summary(data: list[ReportData]):
 
     color_message = f" {total_part}, {ok_part}"
     plain_message = f" {total_count} Total, {ok_count} OK"
+    summary_message = ""
 
     if (ng_count := len(ng_items)) == 0:
         fill_char = f"{Colors.GREEN}={Colors.RESET}"
     else:
-        ng_detail = "\n".join([f"{item.url}: {item.result}" for item in ng_items])
+        ng_detail = "\n".join([f"{item.url}: {item.reason}" for item in ng_items])
+        summary_message += f"{ng_detail}" + "\n"
         ng_part = f"{Colors.RED}{ng_count} NG{Colors.RESET}"
         fill_char = f"{Colors.RED}={Colors.RESET}"
         color_message += f", {ng_part} "
@@ -77,7 +94,7 @@ def summary(data: list[ReportData]):
     left_fill = total_fill // 2
     right_fill = total_fill - left_fill
 
-    summary_message = f"{fill_char*left_fill}{color_message}{fill_char*right_fill}"
+    summary_message += f"{fill_char*left_fill}{color_message}{fill_char*right_fill}"
     return summary_message
 
 

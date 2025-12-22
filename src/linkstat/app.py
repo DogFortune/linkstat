@@ -60,6 +60,8 @@ def main(args=None):
     format = __format_setting(parsed_args)
     src = parsed_args.src
 
+    start_msg = reporter.session_start()
+    print(start_msg)
     files = analyzer.search(src)
     links = analyzer.extract_url(files)
     report_data_list = analyzer.check_links(links)
