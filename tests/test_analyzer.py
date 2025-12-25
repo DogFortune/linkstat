@@ -70,6 +70,17 @@ def test_check_links(path: str, report_data_count: int):
             assert item.reason is not None
 
 
+def test_all_url_syntax_document_pass():
+    """さまざまなURLパターンを記載したドキュメントのテスト。すべてOKになる事"""
+    files = analyzer.search("tests/syntax/")
+    links = analyzer.extract_url(files)
+
+    results_report_data = analyzer.check_links(links)
+
+    for item in results_report_data:
+        assert item.result == "OK"
+
+
 @pytest.mark.parametrize(["path"], [pytest.param("tests/sample_doc/")])
 def test_search(path: str):
     files = analyzer.search(path)

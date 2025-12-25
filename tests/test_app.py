@@ -13,9 +13,6 @@ class TestValid:
         """環境変数も引数も指定しない一気通貫のテスト"""
         app.main(["tests/sample_doc/"])
 
-    # def test_awesome(self):
-    #     app.main(["tmp/awesome-main"])
-
     @pytest.mark.usefixtures("use_mock_server")
     def test_main_with_output_json(self):
         """JSONファイルが出力されている事"""
