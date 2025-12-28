@@ -70,6 +70,28 @@ def test_check_links(path: str, report_data_count: int):
             assert item.reason is not None
 
 
+def test_all_url_syntax_document_pass():
+    """さまざまなURLパターンを記載したドキュメントのテスト。すべてOKになる事"""
+    files = analyzer.search("tests/syntax/url_syntax.md")
+    links = analyzer.extract_url(files)
+
+    results_report_data = analyzer.check_links(links)
+
+    assert len(results_report_data) == 8
+    for item in results_report_data:
+        assert item.result == "OK"
+
+
+def test_two_line():
+    """1行に2つURLがあるパターンの場合、2つとも補足できている事"""
+    files = analyzer.search("tests/syntax/two_url_syntax.md")
+    links = analyzer.extract_url(files)
+
+    results_report_data = analyzer.check_links(links)
+
+    assert len(results_report_data) == 2
+
+
 @pytest.mark.parametrize(["path"], [pytest.param("tests/sample_doc/")])
 def test_search(path: str):
     files = analyzer.search(path)

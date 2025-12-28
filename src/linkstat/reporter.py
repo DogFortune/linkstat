@@ -14,7 +14,7 @@ class ReportData:
     line: int
     url: str
     result: Result
-    code: int
+    code: int | None
     reason: str | None
 
 

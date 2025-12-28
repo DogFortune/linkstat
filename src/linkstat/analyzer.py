@@ -1,12 +1,12 @@
 from pathlib import Path
-from urllib.request import urlopen
+from urllib.request import urlopen, Request
 from urllib.error import HTTPError, URLError
 from linkstat.enums import Result
 from linkstat.reporter import ReportData
 from dataclasses import dataclass
 import re
 
-URL_PATTERN = r'https?://[^\s\)\]>"]+'
+URL_PATTERN = r'https?://[^\s\)\]>"<]+'
 URL_RE = re.compile(URL_PATTERN)
 
 
@@ -15,7 +15,7 @@ class AnalyzeResponse:
     """リンクにアクセスした結果"""
 
     result: Result
-    code: str | None
+    code: int | None
     url: str
     reason: str | None
 
@@ -37,8 +37,12 @@ def request(url: str) -> AnalyzeResponse:
     :return: 結果
     :rtype: AnalyzeResponse
     """
+    # User-Agentヘッダーを追加
+    headers = {"User-Agent": "Mozilla"}
+    req = Request(url, headers=headers)
+
     try:
-        with urlopen(url, timeout=3) as res:
+        with urlopen(req, timeout=5) as res:
             return AnalyzeResponse(Result.OK, res.code, res.url, None)
     except HTTPError as e:
         # アクセスできて400や500系が来た時はこっち
@@ -50,7 +54,7 @@ def request(url: str) -> AnalyzeResponse:
         return AnalyzeResponse(Result.NG, None, url, "Timeout")
 
 
-def check_links(links: dict[str, URLInfo]) -> list[ReportData]:
+def check_links(links: dict[str, list[URLInfo]]) -> list[ReportData]:
     """URLの疎通確認を行います。確認を行うのは重複していないものだけ。
 
     :param links: URLリスト
@@ -93,7 +97,7 @@ def search(path: str, filter="*.md") -> list:
     return files
 
 
-def extract_url(files: list) -> dict[str, URLInfo]:
+def extract_url(files: list) -> dict[str, list[URLInfo]]:
     """ファイルからURLを抽出します。重複しているリンクも含まれます。
 
     :param files: _description_
